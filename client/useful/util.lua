@@ -1,44 +1,8 @@
-function DrawText3D(x, y, z, text)
-    SetDrawOrigin(x, y, z, 0);
-    SetTextFont(0)
-    SetTextProportional(0)
-    SetTextScale(0.0, 0.2)
-    SetTextColour(19, 232, 46, 240)
-    SetTextDropshadow(0, 0, 0, 0, 255)
-    SetTextEdge(2, 0, 0, 0, 150)
-    SetTextDropShadow()
-    SetTextOutline()
-    SetTextEntry("STRING")
-    SetTextCentre(1)
-    AddTextComponentString(text)
-    DrawText(0.0, 0.0)
-    ClearDrawOrigin()
-end
-
 players = {} -- global players table
 
 RegisterNetEvent("Z:playerUpdate")
 AddEventHandler("Z:playerUpdate", function(mPlayers)
 	players = mPlayers
-end)
-
-Citizen.CreateThread(function()
-	function CreateAwaitedKeyboardInput(textentry,title,maxLen,c,d,e)
-		if title then
-			AddTextEntry(textentry, title)
-		end
-		DisplayOnscreenKeyboard(1, textentry, "", "", "", "", "", maxLen)
-
-		local kbupdate = UpdateOnscreenKeyboard()
-		
-		while kbupdate ~= 1 and kbupdate~= 2 do
-			kbupdate =UpdateOnscreenKeyboard()
-			Citizen.Wait( 0 )
-		end
-		
-		local result = GetOnscreenKeyboardResult()
-		return result, kbupdate -- return kbupdate to possibly prevent "cancellation" from causing problems
-	end
 end)
 
 function GetPlayers()
