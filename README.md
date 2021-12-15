@@ -1,4 +1,5 @@
-https://cdn.discordapp.com/attachments/669837527468998658/920523529726857267/Redacted.gif
+![Redacted](https://user-images.githubusercontent.com/71796038/146120378-0f1bf1e5-708d-42b5-977e-177e920c9924.gif)
+
 Standalone RedM Redacted-Zombies Script!
 
 Features:
