@@ -1,4 +1,5 @@
-Standalone RedM Zombie Script!
+https://cdn.discordapp.com/attachments/669837527468998658/920523529726857267/Redacted.gif
+Standalone RedM Redacted-Zombies Script!
 
 Features:
 
