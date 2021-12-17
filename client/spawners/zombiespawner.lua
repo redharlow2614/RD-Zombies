@@ -1,9 +1,5 @@
 -- CONFIG --
 
--- Zombies have a 1 in 150 chance to spawn with guns
--- It will choose a gun in this list when it happens
--- Weapon list here: https://www.se7ensins.com/forums/threads/weapon-and-explosion-hashes-list.1045035/
-
 local walks = {
 	{"default", "very_drunk"},
 	{"murfree", "very_drunk"},
@@ -347,8 +343,8 @@ Citizen.CreateThread(function()
 			repeat
 				Wait(100)
 
-				newX = x + math.random(-50, 50)
-				newY = y + math.random(-50, 50)
+				newX = x + math.random(-_RDConfig.MaxSpawnDistance, _RDConfig.MaxSpawnDistance)
+				newY = y + math.random(-_RDConfig.MaxSpawnDistance, _RDConfig.MaxSpawnDistance)
 				for i = -400,10,400 do
 					RequestCollisionAtCoord(newX, newY, i)
 					Wait(1)
@@ -359,8 +355,7 @@ Citizen.CreateThread(function()
 --					Wait(10)
 					playerX, playerY = table.unpack(GetEntityCoords(GetPlayerPed(-1), true))
 					if newX > playerX - 35 and newX < playerX + 35 or newY > playerY - 35 and newY < playerY + 35 then
-						canSpawn = false
-					else
+						canSpawn = false				else
 						canSpawn = true
 					end
 --				end
@@ -369,6 +364,9 @@ Citizen.CreateThread(function()
 			ped = CreatePed(model, newX, newY, newZ, 0.0, true, false)
 			DecorSetBool(ped, "zombie", true)
 			SetPedOutfitPreset(ped, undead.outfit)
+			if _RDConfig.ShowBlips then
+				Citizen.InvokeNative(0x23f74c2fda6e7c61, _RDConfig.BlipSprite, ped)
+			end
 			if WillThisPedBeaBoss() then
 				local th = math.random(3000,18000)
 				SetPedMaxHealth(ped, th)
@@ -422,9 +420,6 @@ Citizen.CreateThread(function()
 					table.remove(zombies, i)
 			else
 				playerX, playerY = table.unpack(GetEntityCoords(GetPlayerPed(-1), true))
-				if GetPedArmour(ped) <= 90 then
-					SetPedArmour(ped, GetPedArmour(ped)+5)
-				end
 				SetPedAccuracy(ped, 25)
 				SetPedSeeingRange(ped, 20.0)
 				SetPedHearingRange(ped, 65.0)
@@ -475,29 +470,13 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
-
--- -- boss light
--- Citizen.CreateThread(function()
--- 	while true do
--- 		Wait(1)
--- 		for i,ped in pairs(zombies) do
--- 			if DecorGetInt(ped, "IsBoss") == 1 then
--- 				pedX, pedY, pedZ = table.unpack(GetEntityCoords(ped, true))
--- 				DrawLightWithRangeAndShadow(pedX, pedY, pedZ + 0.4, 255, 0, 0, 4.0, 50.0, 5.0)
--- 			end
--- 		end
--- 	end
--- end)
-
-
 Citizen.CreateThread(function()
 	while true do
 		Wait(math.random(5000,15000))
 		for i, ped in pairs(peddeletionqueue) do
 			local model = GetEntityModel(ped)
 			DeleteEntity(ped)
-			print("ZombYEET")
+			--print("ZombYEET")
 			SetModelAsNoLongerNeeded(model)
 			table.remove(peddeletionqueue,i)
 		end
@@ -515,4 +494,15 @@ AddEventHandler("Z:cleanup", function()
 
 		table.remove(zombies, i)
 	end
+end)
+
+AddEventHandler('onResourceStop', function(resourceName)
+  if (GetCurrentResourceName() ~= resourceName) then return end
+	Citizen.InvokeNative(0xBA0980B5C0A11924, 1.0)
+	Citizen.InvokeNative(0xFEDFA97638D61D4A, 1.0)
+	Citizen.InvokeNative(0x1F91D44490E1EA0C, 1.0)
+	Citizen.InvokeNative(0x606374EBFC27B133, 1.0)
+	Citizen.InvokeNative(0x28CB6391ACEDD9DB, 1.0)
+  for k,v in pairs(zombies) do DeleteEntity(v) end
+	for k,v in pairs(peddeletionqueue) do DeleteEntity(v) end
 end)
